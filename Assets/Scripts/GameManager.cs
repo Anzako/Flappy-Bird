@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Audio;
+using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     [SerializeField] private GameObject gameOverMenu;
+    public bool isGameOn;
 
     // Flappy Bird
     [SerializeField] private Transform birdSpawningPosition;
@@ -19,6 +23,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI pointsText;
     [SerializeField] private TextMeshProUGUI highScoreText;
 
+    // Sounds
+    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private UnityEngine.UI.Button muteButton;
+    [SerializeField] private Sprite mutedImage;
+    [SerializeField] private Sprite unmutedImage;
+
     private void Awake()
     {
         if (Instance == null)
@@ -29,6 +39,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        isGameOn = true;
         Time.timeScale = 1f;
         gameOverMenu.SetActive(false);
         timer = 0;
@@ -55,6 +66,7 @@ public class GameManager : MonoBehaviour
     {
         gameOverMenu.SetActive(true);
         Time.timeScale = 0f;
+        isGameOn = false;
 
         SaveScore();
     }
@@ -68,12 +80,14 @@ public class GameManager : MonoBehaviour
         BuildingSpawner.Instance.DestroyBuildings();
         BuildingSpawner.Instance.StartSpawningBuildings();
         flappyBird.position = birdSpawningPosition.position;
+        flappyBird.rotation = Quaternion.identity;
 
         // Points
         timer = 0;
         points = 0;
         UpdatePointsText(0);
 
+        isGameOn = true;
         Time.timeScale = 1f;
     }
 
@@ -104,6 +118,22 @@ public class GameManager : MonoBehaviour
             UpdateHighScoreText(points);
         }
 
+    }
+
+    public void MuteButtonClicked()
+    {
+        float masterVolume;
+        audioMixer.GetFloat("MasterVolume", out masterVolume);
+
+        if (masterVolume == 0f)
+        {
+            audioMixer.SetFloat("MasterVolume", -80f);
+            muteButton.image.sprite = mutedImage; 
+        } else
+        {
+            audioMixer.SetFloat("MasterVolume", 0f);
+            muteButton.image.sprite = unmutedImage;
+        }
     }
 
 }

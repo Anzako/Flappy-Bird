@@ -136,7 +136,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 5
 --- !u!114 &3637309862372944204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,6 +152,7 @@ MonoBehaviour:
   velocity: 5
   rotationSpeed: 3
   space: {fileID: 2877207952899208648, guid: 459d9f64d28cfe14180c9f04268e959a, type: 3}
+  jumpSoundClip: {fileID: 8300000, guid: e9aaa3225c3c90741acbf7b56fc1dce6, type: 3}
 --- !u!61 &847710106865876020
 BoxCollider2D:
   m_ObjectHideFlags: 0

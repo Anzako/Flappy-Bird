@@ -9,6 +9,7 @@ public class BuildingSpawner : MonoBehaviour
     private float timeToDestroy = 10f;
     private float timeToSpawnNextBuilding = 3f;
     private float timer;
+    private int actualPointsIncreasedSpeed;
 
     [SerializeField] private List<GameObject> buildings;
 
@@ -25,6 +26,9 @@ public class BuildingSpawner : MonoBehaviour
     public void StartSpawningBuildings()
     {
         SpawnBuilding();
+        actualPointsIncreasedSpeed = 0;
+        MoveBuilding.speed = 2;
+        timeToSpawnNextBuilding = 3f;
         timer = 0;
     }
 
@@ -36,6 +40,7 @@ public class BuildingSpawner : MonoBehaviour
             timer = 0;
         }
 
+        UpdateBuildingsSpeed();
         timer += Time.deltaTime;
     }
 
@@ -53,6 +58,20 @@ public class BuildingSpawner : MonoBehaviour
         foreach (Transform child in this.transform)
         {
             Destroy(child.gameObject);
+        }
+    }
+
+    private void UpdateBuildingsSpeed()
+    {
+        int points = GameManager.Instance.points;
+        if (points % 10 == 0)
+        {
+            if (actualPointsIncreasedSpeed != points)
+            {
+                actualPointsIncreasedSpeed = points;
+                MoveBuilding.speed += 0.5f;
+                timeToSpawnNextBuilding -= 0.3f;
+            }
         }
     }
 }

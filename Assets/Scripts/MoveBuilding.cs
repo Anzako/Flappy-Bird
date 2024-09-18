@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveBuilding : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    public static float speed;
 
     void Update()
     {

@@ -12,6 +12,8 @@ public class FlappyBird : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    [SerializeField] private AudioClip jumpSoundClip;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -19,9 +21,13 @@ public class FlappyBird : MonoBehaviour
 
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame) 
-        { 
-            rb.velocity = Vector2.up * velocity;
+        if (GameManager.Instance.isGameOn)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame || space.action.IsPressed())
+            {
+                rb.velocity = Vector2.up * velocity;
+                SoundFXManager.Instance.PlaySoundFXClip(jumpSoundClip, transform, 1f);
+            }
         }
 
         transform.rotation = Quaternion.Euler(0, 0, rb.velocity.y * rotationSpeed);
