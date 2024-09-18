@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BuildingSpawner : MonoBehaviour
@@ -7,22 +8,51 @@ public class BuildingSpawner : MonoBehaviour
     private float spawningHeight = 3f;
     private float timeToDestroy = 10f;
     private float timeToSpawnNextBuilding = 3f;
-    [SerializeField] private GameObject building1;
+    private float timer;
 
-    void Start()
+    [SerializeField] private List<GameObject> buildings;
+
+    public static BuildingSpawner Instance;
+
+    private void Awake()
     {
-        StartCoroutine(SpawnBuilding());
+        if (Instance == null)
+        {
+            Instance = this;
+        }
     }
 
-    private IEnumerator SpawnBuilding()
+    public void StartSpawningBuildings()
+    {
+        SpawnBuilding();
+        timer = 0;
+    }
+
+    private void Update()
+    {
+        if (timer > timeToSpawnNextBuilding) 
+        { 
+            SpawnBuilding();
+            timer = 0;
+        }
+
+        timer += Time.deltaTime;
+    }
+
+    private void SpawnBuilding()
     {
         Vector3 spawnPosition = transform.position + new Vector3(0, Random.Range(-spawningHeight, spawningHeight), 0);
-        GameObject building = Instantiate(building1, spawnPosition, Quaternion.identity);
-        Destroy(building, timeToDestroy);
 
-        yield return new WaitForSeconds(timeToSpawnNextBuilding);
-        StartCoroutine(SpawnBuilding());
+        int randomBuilding = Random.Range(0, buildings.Count);
+        GameObject building = Instantiate(buildings[randomBuilding], spawnPosition, Quaternion.identity, transform);
+        Destroy(building, timeToDestroy);
     }
 
-
+    public void DestroyBuildings()
+    {
+        foreach (Transform child in this.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 }

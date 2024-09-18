@@ -8,6 +8,8 @@ public class FlappyBird : MonoBehaviour
     [SerializeField] private float velocity;
     [SerializeField] private float rotationSpeed;
 
+    [SerializeField] private InputActionReference space;
+
     private Rigidbody2D rb;
 
     void Start()
@@ -23,6 +25,14 @@ public class FlappyBird : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Euler(0, 0, rb.velocity.y * rotationSpeed);
-
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.tag != null)
+        {
+            GameManager.Instance.GameOver();
+        }
+    }
+
 }
